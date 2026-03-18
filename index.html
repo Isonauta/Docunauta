@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docunauta — Nodo Sistémico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #2A6041;
+    --verde-oscuro: #1A3D28;
+    --verde-claro: #3D8B5A;
+    --verde-sutil: rgba(42, 96, 65, 0.08);
+    --gris: #9AA5A0;
+    --gris-claro: #C8D0CB;
+    --gris-oscuro: #4A5550;
+    --blanco: #F4F5F2;
+    --negro: #0D1410;
+    --crema: #EEF0EB;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--negro);
+    color: var(--blanco);
+    font-family: 'DM Mono', monospace;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 4rem 4rem;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 40%, rgba(42,96,65,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 70%, rgba(154,165,160,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Grid lines decorativas */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(42,96,65,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(42,96,65,0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--verde-claro);
+    border: 1px solid rgba(42,96,65,0.4);
+    padding: 0.4rem 0.9rem;
+    width: fit-content;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--verde-claro);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gris);
+    margin-bottom: 1rem;
+    animation: fadeUp 0.9s 0.1s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 14vw, 14rem);
+    line-height: 0.88;
+    letter-spacing: 0.02em;
+    color: var(--blanco);
+    animation: fadeUp 1s 0.2s ease both;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title span {
+    color: var(--verde-claro);
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.2vw, 1.6rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--gris-claro);
+    max-width: 600px;
+    margin-top: 2rem;
+    line-height: 1.6;
+    animation: fadeUp 1s 0.35s ease both;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 3rem;
+    margin-top: 3rem;
+    animation: fadeUp 1s 0.5s ease both;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .hero-meta-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gris);
+  }
+
+  .hero-meta-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--blanco);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gris);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: fadeUp 1s 0.8s ease both;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--verde-claro), transparent);
+    animation: scrollLine 2s ease infinite;
+  }
+
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ── PRESENTERS ── */
+  .section {
+    padding: 6rem 4rem;
+    position: relative;
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--verde-claro);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(42,96,65,0.5), transparent);
+  }
+
+  .presenters {
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(42,96,65,0.2);
+  }
+
+  .presenters-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+
+  .presenter-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(42,96,65,0.15);
+    padding: 2.5rem;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .presenter-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--verde);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.4s ease;
+  }
+
+  .presenter-card:hover::before { transform: scaleY(1); }
+  .presenter-card:hover {
+    border-color: rgba(42,96,65,0.4);
+    background: rgba(42,96,65,0.05);
+  }
+
+  .presenter-discipline {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--verde-claro);
+    margin-bottom: 1rem;
+  }
+
+  .presenter-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--blanco);
+    margin-bottom: 0.8rem;
+  }
+
+  .presenter-role {
+    font-size: 0.75rem;
+    color: var(--gris);
+    line-height: 1.7;
+  }
+
+  .presenter-icon {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 40px;
+    height: 40px;
+    opacity: 0.15;
+  }
+
+  /* ── SEASON INTRO ── */
+  .season-intro {
+    border-top: 1px solid rgba(42,96,65,0.2);
+  }
+
+  .season-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--gris-claro);
+    max-width: 800px;
+  }
+
+  .season-text strong {
+    color: var(--verde-claro);
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  /* ── VIDEOS ── */
+  .videos {
+    border-top: 1px solid rgba(42,96,65,0.2);
+    padding-bottom: 8rem;
+  }
+
+  .videos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .video-card {
+    position: relative;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(42,96,65,0.12);
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .video-card:hover {
+    border-color: rgba(42,96,65,0.45);
+  }
+
+  .video-number {
+    position: absolute;
+    top: 1.2rem;
+    left: 1.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--verde);
+    opacity: 0.35;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .video-embed {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: block;
+    border: none;
+  }
+
+  .video-info {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(42,96,65,0.12);
+  }
+
+  .video-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--verde-claro);
+    margin-bottom: 0.4rem;
+  }
+
+  .video-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--gris-claro);
+    font-style: italic;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(42,96,65,0.3);
+    padding: 3rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .footer-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.08em;
+    color: var(--verde-claro);
+  }
+
+  .footer-sub {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gris);
+  }
+
+  .footer-copy {
+    font-size: 0.65rem;
+    color: var(--gris-oscuro);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── DECO ORBITAL ── */
+  .orbital-deco {
+    position: absolute;
+    right: -80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 400px;
+    height: 400px;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero { padding: 5rem 1.5rem 3rem; }
+    .section { padding: 4rem 1.5rem; }
+    footer { padding: 2.5rem 1.5rem; }
+    .presenters-grid, .videos-grid { grid-template-columns: 1fr; }
+    .hero-meta { flex-direction: column; gap: 1.5rem; }
+    .orbital-deco { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">Temporada Completa · 2025</div>
+  <p class="hero-eyebrow">Podcast · Nodo Sistémico</p>
+  <h1 class="hero-title">
+    Docu<span>nauta</span>
+  </h1>
+  <p class="hero-subtitle">
+    Gestión documental en organizaciones, analizada desde las ciencias sociales y la ingeniería industrial.
+  </p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Episodios</span>
+      <span class="hero-meta-value">4 capítulos</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Formato</span>
+      <span class="hero-meta-value">Análisis sistémico</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Acceso</span>
+      <span class="hero-meta-value">Temporada completa</span>
+    </div>
+  </div>
+
+  <!-- Isologo orbital SVG decorativo -->
+  <svg class="orbital-deco" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" fill="none">
+    <ellipse cx="200" cy="200" rx="160" ry="55" stroke="white" stroke-width="8" transform="rotate(-35 200 200)"/>
+    <ellipse cx="200" cy="200" rx="160" ry="55" stroke="white" stroke-width="5" transform="rotate(35 200 200)" opacity="0.5"/>
+    <circle cx="200" cy="200" r="30" stroke="white" stroke-width="5" stroke-dasharray="8 6"/>
+    <circle cx="148" cy="178" r="8" fill="white"/>
+    <circle cx="240" cy="178" r="8" fill="white"/>
+    <circle cx="175" cy="228" r="8" fill="white"/>
+  </svg>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    explorar
+  </div>
+</section>
+
+<!-- PRESENTERS -->
+<section class="section presenters">
+  <div class="section-label">Conductores de la temporada</div>
+  <div class="presenters-grid">
+    <div class="presenter-card reveal">
+      <div class="presenter-discipline">Ciencias Sociales · Sociología</div>
+      <h2 class="presenter-name">Cristián Cordero<br>Placencia</h2>
+      <p class="presenter-role">
+        Sociólogo con 25 años de experiencia en sistemas de gestión ISO, cultura organizacional y diseño de interacción humano-IA. Fundador de Procesus y Escuela de la Gestión.
+      </p>
+      <svg class="presenter-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="30" r="28" stroke="white" stroke-width="3"/>
+        <path d="M10 30 Q30 10 50 30 Q30 50 10 30Z" stroke="white" stroke-width="2" fill="none"/>
+      </svg>
+    </div>
+    <div class="presenter-card reveal">
+      <div class="presenter-discipline">Ingeniería Industrial · Mg.</div>
+      <h2 class="presenter-name">Nilsson Cordero<br>Placencia</h2>
+      <p class="presenter-role">
+        Magíster en Ingeniería Industrial. Aporta la mirada técnica y de sistemas de producción al análisis de la gestión documental en organizaciones complejas.
+      </p>
+      <svg class="presenter-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="50" height="50" rx="4" stroke="white" stroke-width="3"/>
+        <path d="M15 30 L25 20 L35 30 L45 15" stroke="white" stroke-width="2" fill="none"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- SEASON INTRO -->
+<section class="section season-intro">
+  <div class="section-label">Sobre esta temporada</div>
+  <p class="season-text reveal">
+    <strong>Docunauta</strong> explora la gestión documental no como un problema burocrático, sino como un fenómeno sistémico: cómo las organizaciones producen, ordenan y comunican su memoria. Dos disciplinas, una conversación. Sociología e ingeniería industrial se encuentran para leer lo que los documentos dicen — y lo que callan.
+  </p>
+</section>
+
+<!-- VIDEOS -->
+<section class="section videos">
+  <div class="section-label">Episodios · Temporada completa</div>
+  <div class="videos-grid">
+
+    <div class="video-card reveal">
+      <span class="video-number">01</span>
+      <iframe class="video-embed"
+        src="https://www.youtube.com/embed/318Qw9gqOpo"
+        title="Docunauta Episodio 1"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy">
+      </iframe>
+      <div class="video-info">
+        <div class="video-label">Episodio 01 · Docunauta</div>
+        <div class="video-title">Nodo Sistémico — Temporada Docunauta</div>
+      </div>
+    </div>
+
+    <div class="video-card reveal">
+      <span class="video-number">02</span>
+      <iframe class="video-embed"
+        src="https://www.youtube.com/embed/fqhPXD9XMXI"
+        title="Docunauta Episodio 2"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy">
+      </iframe>
+      <div class="video-info">
+        <div class="video-label">Episodio 02 · Docunauta</div>
+        <div class="video-title">Nodo Sistémico — Temporada Docunauta</div>
+      </div>
+    </div>
+
+    <div class="video-card reveal">
+      <span class="video-number">03</span>
+      <iframe class="video-embed"
+        src="https://www.youtube.com/embed/goOsjCDlcWU"
+        title="Docunauta Episodio 3"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy">
+      </iframe>
+      <div class="video-info">
+        <div class="video-label">Episodio 03 · Docunauta</div>
+        <div class="video-title">Nodo Sistémico — Temporada Docunauta</div>
+      </div>
+    </div>
+
+    <div class="video-card reveal">
+      <span class="video-number">04</span>
+      <iframe class="video-embed"
+        src="https://www.youtube.com/embed/btpBcnm6mRA"
+        title="Docunauta Episodio 4"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy">
+      </iframe>
+      <div class="video-info">
+        <div class="video-label">Episodio 04 · Docunauta</div>
+        <div class="video-title">Nodo Sistémico — Temporada Docunauta</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-name">Nodo Sistémico</div>
+    <div class="footer-sub">Podcast · Temporada Docunauta</div>
+  </div>
+  <div class="footer-copy">
+    © 2025 · Cristián Cordero Placencia & Nilsson Cordero Placencia
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
